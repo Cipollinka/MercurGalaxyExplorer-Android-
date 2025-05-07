@@ -12,11 +12,12 @@ import Params from './Params';
 
 import AppManagerStack from './AppManagerStack';
 import LoaderRoot from './LoaderRoot';
-import WhiteMain from './WhiteMain';
+import App from '../../App';
+import FBDeepLink from 'react-native-fb-deeplink';
 
 export default function AppManager() {
   const viewLoader = <LoaderRoot />;
-  const viewGame = <WhiteMain />;
+  const viewGame = <App />;
   const appManagerStack = (link, _userAgent) => (
     <AppManagerStack dataLoad={link} userAgent={_userAgent} />
   );
@@ -35,6 +36,7 @@ export default function AppManager() {
   const userAgent = useRef(null);
   const appendParams = useRef(null);
   const unityParams = useRef(null);
+  const deepParams = useRef(null);
 
   const _status_error = 'ERROR';
 
@@ -144,12 +146,12 @@ export default function AppManager() {
           appsID.current
         }&adID=${adID.current}&onesignalID=${onesignalID.current}&deviceID=${
           deviceID.current
-        }&userID=${deviceID.current}${generateSubs()}${
-          appendParams.current ? `&info=${appendParams.current}` : ''
-        }` +
+        }&userID=${deviceID.current}${
+          subsRef.current ? generateSubs() : generateDeep()
+        }${appendParams.current ? `&info=${deepParams.current}` : ''}` +
         '&timestamp=' +
         userID.current +
-          (unityParams.current ? unityParams.current : '');
+        (unityParams.current ? unityParams.current : '');
       console.log(dataLoad.current);
       Storage.save('link', dataLoad.current);
       openAppManagerView(true, false);
@@ -182,11 +184,20 @@ export default function AppManager() {
     return `&${subParams}`;
   }
 
+  function generateDeep() {
+    console.log('generate subs');
+    if (!deepParams.current) {
+      return '';
+    }
+    return `&${deepParams.current}`;
+  }
+
   // ініціалізація appsflyer
   async function initAppsflyer() {
     console.log('init Appsflyer');
     appsFlyer.initSdk({
       devKey: Params.keyApps,
+      appId: Params.appID,
       isDebug: false,
       onInstallConversionDataListener: true,
       onDeepLinkListener: true,
@@ -208,6 +219,7 @@ export default function AppManager() {
         if (res) {
           appsFlyer.initSdk({
             devKey: Params.keyApps,
+            appId: Params.appID,
             isDebug: false,
             onInstallConversionDataListener: false,
             onDeepLinkListener: true,
@@ -278,7 +290,17 @@ export default function AppManager() {
     }, 500);
   }
 
+  async function checkDeep() {
+    const deepLink = await FBDeepLink.getDeepLink();
+    console.log('Deep link:', deepLink);
+    deepParams.current = deepLink.split('approved?')[1];
+  }
+
   useEffect(() => {
+    let getDeep = async () => {
+      (await FBDeepLink.initialize(Params.fbAppID, Params.fbClientToken)).then(await checkDeep());
+    };
+    getDeep();
     initApp();
   }, []);
 

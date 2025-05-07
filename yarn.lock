@@ -5744,6 +5744,11 @@ react-native-device-info@^14.0.4:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-14.0.4.tgz#56b24ace9ff29a66bdfc667209086421ed6cfdce"
   integrity sha512-NX0wMAknSDBeFnEnSFQ8kkAcQrFHrG4Cl0mVjoD+0++iaKrOupiGpBXqs8xR0SeJyPC5zpdPl4h/SaBGly6UxA==
 
+react-native-fb-deeplink@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-fb-deeplink/-/react-native-fb-deeplink-1.0.1.tgz#b6eede6ebd217d307c505377cc66f1f2358fb08e"
+  integrity sha512-Ee8q8cyw6Mq8DH7TSPaszy13ovUMHlMWax6ypT1tnuG0pVr9Pz3nMxEiLOmtsCwV03iWR8J7shCB7HT71jwoRQ==
+
 react-native-gesture-handler@^2.25.0:
   version "2.25.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.25.0.tgz#3a5a8912ea4f5e68ab211a9fa5a191c08ad50883"
